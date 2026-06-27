@@ -3,6 +3,10 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
+  await prisma.processResource.deleteMany()
+  await prisma.process.deleteMany()
+  console.log('Cleared existing processes')
+
   console.log('Seeding resources...')
 
   const resources = await Promise.all([
@@ -92,6 +96,9 @@ async function main() {
     prisma.resource.upsert({ where: { slug: 'funeral-scroll' }, update: {}, create: { name: 'Funeral Scroll', slug: 'funeral-scroll', category: 'OTHER', mobile: false, obtainHint: 'Loja NP, eventos' } }),
     prisma.resource.upsert({ where: { slug: 'cupom-bonus' }, update: {}, create: { name: 'Cupom de Bônus', slug: 'cupom-bonus', category: 'OTHER', mobile: false, obtainHint: 'Eventos' } }),
     prisma.resource.upsert({ where: { slug: 'eye-of-wisdom' }, update: {}, create: { name: 'Eye of Wisdom', slug: 'eye-of-wisdom', category: 'OTHER', mobile: false, obtainHint: 'Quest Ruínas Profanadas (em breve)' } }),
+    prisma.resource.upsert({ where: { slug: 'essence-0' }, update: {}, create: { name: 'Essência +0', slug: 'essence-0', category: 'OTHER', mobile: true, obtainHint: 'Dragon Field — 2º andar' } }),
+    prisma.resource.upsert({ where: { slug: 'essence-9' }, update: {}, create: { name: 'Essência +9', slug: 'essence-9', category: 'OTHER', mobile: true, obtainHint: 'Refinação de Essência +0' } }),
+    prisma.resource.upsert({ where: { slug: 'soul-frag' }, update: {}, create: { name: 'Soul Fragment', slug: 'soul-frag', category: 'OTHER', mobile: true, obtainHint: 'Drop de bosses' } }),
   ])
 
   console.log(`Created ${resources.length} resources`)
@@ -177,11 +184,11 @@ async function main() {
       name: 'Refinação Armadura Celestial +11→+12',
       category: 'ARMOR',
       fromLevel: 11, toLevel: 12,
-      successRate: null,
-      notes: 'Requer 4 essências +0 e 10 Soul Fragment (adicionar ao inventário manualmente).',
+      notes: 'NPC Odin. Essências +0.',
       resources: [
+        { slug: 'essence-0', quantity: 4, isConsumedOnFail: true },
+        { slug: 'soul-frag', quantity: 10, isConsumedOnFail: true },
         { slug: 'emblema-valk', quantity: 1, isConsumedOnFail: true },
-        { slug: 'soul-fragment', quantity: 10, isConsumedOnFail: true },
         { slug: 'gold', quantity: 75, isConsumedOnFail: true },
       ]
     },
@@ -189,10 +196,11 @@ async function main() {
       name: 'Refinação Armadura Celestial +12→+13',
       category: 'ARMOR',
       fromLevel: 12, toLevel: 13,
-      notes: 'Requer 4 essências +0 e 10 Soul Fragment (adicionar ao inventário manualmente).',
+      notes: 'NPC Odin. Essências +0.',
       resources: [
+        { slug: 'essence-0', quantity: 4, isConsumedOnFail: true },
+        { slug: 'soul-frag', quantity: 10, isConsumedOnFail: true },
         { slug: 'emblema-valk', quantity: 1, isConsumedOnFail: true },
-        { slug: 'soul-fragment', quantity: 10, isConsumedOnFail: true },
         { slug: 'gold', quantity: 100, isConsumedOnFail: true },
       ]
     },
@@ -200,10 +208,11 @@ async function main() {
       name: 'Refinação Armadura Celestial +13→+14',
       category: 'ARMOR',
       fromLevel: 13, toLevel: 14,
-      notes: 'Requer 4 essências +9 e 10 Soul Fragment (adicionar ao inventário manualmente).',
+      notes: 'NPC Odin. Essências +9.',
       resources: [
+        { slug: 'essence-9', quantity: 4, isConsumedOnFail: true },
+        { slug: 'soul-frag', quantity: 10, isConsumedOnFail: true },
         { slug: 'emblema-valk', quantity: 1, isConsumedOnFail: true },
-        { slug: 'soul-fragment', quantity: 10, isConsumedOnFail: true },
         { slug: 'gold', quantity: 150, isConsumedOnFail: true },
       ]
     },
@@ -211,10 +220,11 @@ async function main() {
       name: 'Refinação Armadura Celestial +14→+15',
       category: 'ARMOR',
       fromLevel: 14, toLevel: 15,
-      notes: 'Requer 4 essências +9 e 10 Soul Fragment (adicionar ao inventário manualmente).',
+      notes: 'NPC Odin. Essências +9.',
       resources: [
+        { slug: 'essence-9', quantity: 4, isConsumedOnFail: true },
+        { slug: 'soul-frag', quantity: 10, isConsumedOnFail: true },
         { slug: 'emblema-valk', quantity: 1, isConsumedOnFail: true },
-        { slug: 'soul-fragment', quantity: 10, isConsumedOnFail: true },
         { slug: 'gold', quantity: 200, isConsumedOnFail: true },
       ]
     },

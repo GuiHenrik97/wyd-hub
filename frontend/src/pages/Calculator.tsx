@@ -9,6 +9,44 @@ const CATEGORIES = [
   { key: 'MOUNT', label: 'Montarias' },
 ]
 
+const CATEGORY_FILTERS: Record<string, string[]> = {
+  ARMOR: ['MORTAL', 'ARCH', 'CELESTIAL', 'RD', 'BAHAMUT'],
+  CYTHERA: ['MISTICA', 'ARCANA', 'AMUNRA', 'BAHAMUT', 'ANUBIS'],
+  ACCESSORY: ['AMUNRA', 'BAHAMUT', 'ANCIENT'],
+  MANTLE: ['CELESTIAL', 'BAHAMUT'],
+  MOUNT: ['MONTARIA', 'JACKAL'],
+}
+
+const FILTER_ORDER: Record<string, number> = {
+  MORTAL: 1, ARCH: 2, CELESTIAL: 3, RD: 4, BAHAMUT: 5,
+  MISTICA: 1, ARCANA: 2, AMUNRA: 3, ANUBIS: 5, ANCIENT: 6,
+  MONTARIA: 1, JACKAL: 2,
+}
+
+function getProcessTier(name: string): string {
+  const n = name.toUpperCase()
+  if (n.includes('MORTAL')) return 'MORTAL'
+  if (n.includes('ARCH')) return 'ARCH'
+  if (n.includes('CELESTIAL')) return 'CELESTIAL'
+  if (n.includes('RED DRAGON') || n.includes(' RD')) return 'RD'
+  if (n.includes('BAHAMUT')) return 'BAHAMUT'
+  if (n.includes('MÍSTICA') || n.includes('MISTICA')) return 'MISTICA'
+  if (n.includes('ARCANA')) return 'ARCANA'
+  if (n.includes('AMUNRA')) return 'AMUNRA'
+  if (n.includes('ANÚBIS') || n.includes('ANUBIS')) return 'ANUBIS'
+  if (n.includes('ANCIENT')) return 'ANCIENT'
+  if (n.includes('JACKAL')) return 'JACKAL'
+  if (n.includes('MONTARIA') || n.includes('NÍVEL')) return 'MONTARIA'
+  return 'OTHER'
+}
+
+function getProcessOrder(process: any): number {
+  const tier = getProcessTier(process.name)
+  const tierOrder = FILTER_ORDER[tier] ?? 99
+  const isCreation = process.name.toLowerCase().includes('criação')
+  return tierOrder * 100 + (isCreation ? 0 : 1) * 10 + (process.fromLevel ?? 0)
+}
+
 function ProcessCard({ process }: { process: any }) {
   const [open, setOpen] = useState(false)
   const [quantity, setQuantity] = useState(1)
@@ -92,6 +130,7 @@ export function Calculator() {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('ARMOR')
   const [search, setSearch] = useState('')
+  const [activeFilters, setActiveFilters] = useState<string[]>([])
 
   useEffect(() => {
     calculatorApi.getProcesses().then(({ data }) => {
@@ -100,10 +139,20 @@ export function Calculator() {
     })
   }, [])
 
-  const filtered = processes.filter(p =>
-    p.category === activeTab &&
-    p.name.toLowerCase().includes(search.toLowerCase())
-  )
+  const toggleFilter = (f: string) => {
+    setActiveFilters(prev =>
+      prev.includes(f) ? prev.filter(x => x !== f) : [...prev, f]
+    )
+  }
+
+  const filtered = processes
+    .filter(p => {
+      if (p.category !== activeTab) return false
+      if (!p.name.toLowerCase().includes(search.toLowerCase())) return false
+      if (activeFilters.length === 0) return true
+      return activeFilters.includes(getProcessTier(p.name))
+    })
+    .sort((a, b) => getProcessOrder(a) - getProcessOrder(b))
 
   if (loading) return (
     <main className="max-w-4xl mx-auto px-6 py-12">
@@ -125,7 +174,7 @@ export function Calculator() {
         {CATEGORIES.map(cat => (
           <button
             key={cat.key}
-            onClick={() => { setActiveTab(cat.key); setSearch('') }}
+            onClick={() => { setActiveTab(cat.key); setSearch(''); setActiveFilters([]) }}
             className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-all shrink-0 ${
               activeTab === cat.key
                 ? 'bg-amber-500 text-black'
@@ -136,6 +185,24 @@ export function Calculator() {
           </button>
         ))}
       </div>
+
+      {CATEGORY_FILTERS[activeTab] && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {CATEGORY_FILTERS[activeTab].map(f => (
+            <button
+              key={f}
+              onClick={() => toggleFilter(f)}
+              className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+                activeFilters.includes(f)
+                  ? 'bg-amber-500 text-black border-amber-500'
+                  : 'bg-zinc-900 text-zinc-400 border-zinc-700 hover:border-amber-500/50 hover:text-white'
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="mb-4">
         <input
