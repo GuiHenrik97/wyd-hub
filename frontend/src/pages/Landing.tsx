@@ -7,7 +7,7 @@ export function Landing() {
     <main className="flex flex-col items-center justify-center min-h-[90vh] px-6 text-center gap-8">
       <div className="flex flex-col gap-4 max-w-2xl">
         <span className="text-amber-500 text-sm font-medium tracking-widest uppercase">
-          WYD Global
+          WYD HUB
         </span>
         <h1 className="text-5xl font-bold text-white leading-tight">
           Seu companion para<br />
