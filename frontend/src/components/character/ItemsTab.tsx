@@ -52,6 +52,10 @@ export function ItemsTab({ character }: { character: any }) {
     weaponRefinement: items.weaponRefinement ?? 0,
     weaponAdditional: items.weaponAdditional ?? '',
     weaponAncient: items.weaponAncient ?? false,
+    weapon2Type: items.weapon2Type ?? '',
+    weapon2Refinement: items.weapon2Refinement ?? 0,
+    weapon2Additional: items.weapon2Additional ?? '',
+    weapon2Ancient: items.weapon2Ancient ?? false,
     mountType: items.mountType ?? '',
     mountLevel: items.mountLevel ?? 0,
     mountVitality: items.mountVitality ?? 0,
@@ -116,6 +120,27 @@ export function ItemsTab({ character }: { character: any }) {
         <label className={`flex items-center gap-2 text-sm cursor-pointer ${form.weaponRefinement < 9 ? 'opacity-40 cursor-not-allowed' : 'text-zinc-300'}`}>
           <input type="checkbox" className="accent-amber-500" disabled={form.weaponRefinement < 9}
             checked={form.weaponAncient} onChange={e => set('weaponAncient', e.target.checked)} />
+          Ancient <span className="text-zinc-500">(requer +9)</span>
+        </label>
+      </div>
+
+      <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 flex flex-col gap-4">
+        <h2 className="text-white font-medium">Arma 2 <span className="text-zinc-500 text-sm font-normal">(opcional — armas de 1 mão)</span></h2>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-zinc-400">Tipo</label>
+            <select value={form.weapon2Type} onChange={e => set('weapon2Type', e.target.value)}
+              className="bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-amber-500">
+              <option value="">— Nenhuma —</option>
+              {WEAPON_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
+            </select>
+          </div>
+          <RefineSelect label="Refinação" value={form.weapon2Refinement} onChange={v => set('weapon2Refinement', v)} />
+        </div>
+        <Input label="Adicional (BS/base)" placeholder="ex: Gram +9" value={form.weapon2Additional} onChange={e => set('weapon2Additional', e.target.value)} />
+        <label className={`flex items-center gap-2 text-sm cursor-pointer ${form.weapon2Refinement < 9 ? 'opacity-40 cursor-not-allowed' : 'text-zinc-300'}`}>
+          <input type="checkbox" className="accent-amber-500" disabled={form.weapon2Refinement < 9}
+            checked={form.weapon2Ancient} onChange={e => set('weapon2Ancient', e.target.checked)} />
           Ancient <span className="text-zinc-500">(requer +9)</span>
         </label>
       </div>
