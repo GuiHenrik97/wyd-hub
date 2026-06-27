@@ -36,6 +36,17 @@ export default function App() {
             <ProtectedRoute><Timers /></ProtectedRoute>
           } />
         </Routes>
+        <footer className="mt-16 pt-8 border-t border-zinc-800 text-center flex flex-col gap-1 pb-8">
+          <p className="text-zinc-600 text-xs">
+            Desenvolvido por <span className="text-zinc-400">Uzuhiko / Zanuto02</span> — WYD Global
+          </p>
+          <p className="text-zinc-600 text-xs">
+            Contato: <a href="mailto:guilhermehssouza97@gmail.com" className="text-amber-500 hover:text-amber-400 transition-colors">guilhermehssouza97@gmail.com</a>
+          </p>
+          <p className="text-zinc-600 text-xs mt-1">
+            Este projeto não é afiliado à Raid Hut ou JoyImpact.
+          </p>
+        </footer>
       </div>
     </div>
   )
