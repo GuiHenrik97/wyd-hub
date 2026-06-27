@@ -23,7 +23,7 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 
-  await app.listen(3001)
+  await app.listen(process.env.PORT ?? 3001)
   console.log('Backend rodando em http://localhost:3001')
 }
 
