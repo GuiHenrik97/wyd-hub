@@ -206,17 +206,21 @@ export function Calculator() {
   const isAuthenticated = useAuthStore(s => s.isAuthenticated)
   const [processes, setProcesses] = useState<any[]>([])
   const [inventory, setInventory] = useState<Record<string, number>>({})
+  const [allResources, setAllResources] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('ARMOR')
   const [search, setSearch] = useState('')
   const [activeFilters, setActiveFilters] = useState<string[]>([])
+  const [showInventory, setShowInventory] = useState(false)
+  const [inventorySearch, setInventorySearch] = useState('')
 
   useEffect(() => {
-    const promises: Promise<any>[] = [calculatorApi.getProcesses()]
+    const promises: Promise<any>[] = [calculatorApi.getProcesses(), calculatorApi.getResources()]
     if (isAuthenticated) promises.push(calculatorApi.getInventory())
 
-    Promise.all(promises).then(([procRes, invRes]) => {
+    Promise.all(promises).then(([procRes, resRes, invRes]) => {
       setProcesses(procRes.data)
+      setAllResources(resRes.data)
       if (invRes) {
         const inv: Record<string, number> = {}
         invRes.data.forEach((item: any) => { inv[item.resourceId] = item.quantity })
@@ -258,75 +262,149 @@ export function Calculator() {
   )
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-12">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white">Calculadora</h1>
-        <p className="text-zinc-400 mt-1 text-sm">
-          Clique em um processo para ver os materiais necessários.{' '}
-          <span className="text-amber-500">Itens em laranja não são consumidos em falha.</span>
-        </p>
-        {isAuthenticated && (
-          <p className="text-zinc-500 text-xs mt-1">
-            Estoque baseado no seu{' '}
-            <a href="/app/inventario" className="text-amber-500 hover:text-amber-400 underline">inventário</a>.
-            {' '}Atualize-o para ver tentativas disponíveis.
-          </p>
+    <main className="max-w-6xl mx-auto px-6 py-12">
+      <div className="flex gap-6">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between mb-8 gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-white">Calculadora</h1>
+              <p className="text-zinc-400 mt-1 text-sm">
+                Clique em um processo para ver os materiais necessários.{' '}
+                <span className="text-amber-500">Itens em laranja não são consumidos em falha.</span>
+              </p>
+              {isAuthenticated && (
+                <p className="text-zinc-500 text-xs mt-1">
+                  Estoque baseado no seu{' '}
+                  <a href="/app/inventario" className="text-amber-500 hover:text-amber-400 underline">inventário</a>.
+                </p>
+              )}
+            </div>
+            {isAuthenticated && (
+              <button
+                onClick={() => setShowInventory(v => !v)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm transition-all shrink-0 ${
+                  showInventory
+                    ? 'bg-amber-500/10 border-amber-500/40 text-amber-400'
+                    : 'bg-zinc-900 border-zinc-700 text-zinc-400 hover:border-amber-500/40 hover:text-white'
+                }`}
+              >
+                <span>{showInventory ? '◀' : '▶'}</span>
+                Inventário
+              </button>
+            )}
+          </div>
+
+          <div className="flex gap-1 mb-6 bg-zinc-900 p-1 rounded-lg overflow-x-auto">
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat.key}
+                onClick={() => { setActiveTab(cat.key); setSearch(''); setActiveFilters([]) }}
+                className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-all shrink-0 ${
+                  activeTab === cat.key
+                    ? 'bg-amber-500 text-black'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {CATEGORY_FILTERS[activeTab] && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {CATEGORY_FILTERS[activeTab].map(f => (
+                <button
+                  key={f}
+                  onClick={() => toggleFilter(f)}
+                  className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
+                    activeFilters.includes(f)
+                      ? 'bg-amber-500 text-black border-amber-500'
+                      : 'bg-zinc-900 text-zinc-400 border-zinc-700 hover:border-amber-500/50 hover:text-white'
+                  }`}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Buscar processo..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500 transition-colors text-sm"
+            />
+          </div>
+
+          {filtered.length === 0 ? (
+            <p className="text-zinc-600 text-sm">Nenhum processo encontrado.</p>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {filtered.map(process => (
+                <ProcessCard key={process.id} process={process} inventory={inventory} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {isAuthenticated && showInventory && (
+          <div className="w-72 shrink-0">
+            <div className="sticky top-6 bg-zinc-900 border border-zinc-800 rounded-xl p-4 max-h-[80vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-white font-medium text-sm">Meu inventário</h2>
+                <button
+                  onClick={() => setShowInventory(false)}
+                  className="text-zinc-600 hover:text-zinc-400 text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+              <input
+                type="text"
+                placeholder="Filtrar..."
+                value={inventorySearch}
+                onChange={e => setInventorySearch(e.target.value)}
+                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500 text-xs mb-3"
+              />
+              <div className="flex flex-col gap-1">
+                {Object.entries(inventory)
+                  .filter(([id]) => {
+                    if (!inventorySearch) return true
+                    const resource = allResources.find((r: any) => r.id === id)
+                    if (!resource) return false
+                    return resource.name.toLowerCase()
+                      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+                      .includes(inventorySearch.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''))
+                  })
+                  .filter(([, qty]) => qty > 0)
+                  .sort(([idA], [idB]) => {
+                    const nameA = allResources.find((r: any) => r.id === idA)?.name ?? ''
+                    const nameB = allResources.find((r: any) => r.id === idB)?.name ?? ''
+                    return nameA.localeCompare(nameB)
+                  })
+                  .map(([id, qty]) => {
+                    const resource = allResources.find((r: any) => r.id === id)
+                    if (!resource) return null
+                    return (
+                      <div key={id} className="flex items-center justify-between py-1.5 border-b border-zinc-800 last:border-0">
+                        <span className="text-zinc-300 text-xs truncate mr-2">{resource.name}</span>
+                        <span className="text-amber-400 text-xs font-medium shrink-0">{qty}</span>
+                      </div>
+                    )
+                  })}
+                {Object.values(inventory).every(v => v === 0) && (
+                  <p className="text-zinc-600 text-xs text-center py-4">
+                    Nenhum item no inventário ainda.{' '}
+                    <a href="/app/inventario" className="text-amber-500 hover:text-amber-400">Cadastrar</a>
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
         )}
       </div>
-
-      <div className="flex gap-1 mb-6 bg-zinc-900 p-1 rounded-lg overflow-x-auto">
-        {CATEGORIES.map(cat => (
-          <button
-            key={cat.key}
-            onClick={() => { setActiveTab(cat.key); setSearch(''); setActiveFilters([]) }}
-            className={`px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-all shrink-0 ${
-              activeTab === cat.key
-                ? 'bg-amber-500 text-black'
-                : 'text-zinc-400 hover:text-white'
-            }`}
-          >
-            {cat.label}
-          </button>
-        ))}
-      </div>
-
-      {CATEGORY_FILTERS[activeTab] && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {CATEGORY_FILTERS[activeTab].map(f => (
-            <button
-              key={f}
-              onClick={() => toggleFilter(f)}
-              className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
-                activeFilters.includes(f)
-                  ? 'bg-amber-500 text-black border-amber-500'
-                  : 'bg-zinc-900 text-zinc-400 border-zinc-700 hover:border-amber-500/50 hover:text-white'
-              }`}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Buscar processo..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500 transition-colors text-sm"
-        />
-      </div>
-
-      {filtered.length === 0 ? (
-        <p className="text-zinc-600 text-sm">Nenhum processo encontrado.</p>
-      ) : (
-        <div className="flex flex-col gap-2">
-          {filtered.map(process => (
-            <ProcessCard key={process.id} process={process} inventory={inventory} />
-          ))}
-        </div>
-      )}
     </main>
   )
 }
