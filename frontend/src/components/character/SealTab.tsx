@@ -129,7 +129,7 @@ export function SealTab({ character }: { character: any }) {
               onFocus={e => e.target.select()}
               onChange={e => set('mantleRefinement', e.target.value === '' ? 0 : Number(e.target.value))} />
             {form.mantleType === 'CELESTIAL'
-              ? <Input label="Adicional" placeholder="BS/base" value={form.mantleAdditional} onChange={e => set('mantleAdditional', e.target.value)} />
+              ? <Input label="Adicional" placeholder="Ex: Atk/Def PvP, Imu, Atk PvP" value={form.mantleAdditional} onChange={e => set('mantleAdditional', e.target.value)} />
               : <Input label="Tier" type="number" min={0} max={5} placeholder="0"
                   value={form.mantleTier === 0 ? '' : form.mantleTier}
                   onFocus={e => e.target.select()}

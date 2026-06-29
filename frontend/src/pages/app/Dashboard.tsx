@@ -64,8 +64,8 @@ function CharacterCard({ char, onClick, onEdit, onDelete }: { char: any; onClick
               {seal.class1Level || '—'}{seal.class2Level ? `/${seal.class2Level}` : ''}
             </p>
             {seal.mantleType && (
-              <p className="text-zinc-400 text-xs truncate">
-                {seal.mantleType} {seal.mantleRefinement != null ? `+${seal.mantleRefinement}` : ''}
+              <p className="text-zinc-400 text-xs">
+                {seal.mantleRefinement != null ? `+${seal.mantleRefinement}` : ''}{seal.mantleAdditional ? ` ${seal.mantleAdditional}` : ''}
               </p>
             )}
             <div className="flex flex-wrap gap-1 mt-1">
