@@ -22,6 +22,7 @@ export function Navbar() {
         <div className="border-b border-zinc-800/50 px-6 py-3 flex items-center justify-between gap-4" style={{ background: 'rgba(24,24,27,0.85)' }}>
           <p className="text-zinc-400 text-sm">
             ✉️ Confirme seu email para garantir acesso à sua conta.{' '}
+            <span className="text-zinc-500 text-xs">Verifique também a pasta de spam.</span>
           </p>
           <div className="flex items-center gap-3 shrink-0">
             <button
