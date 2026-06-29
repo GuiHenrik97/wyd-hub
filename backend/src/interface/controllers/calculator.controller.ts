@@ -7,6 +7,13 @@ import { PrismaService } from '../../infrastructure/database/prisma.service'
 export class CalculatorController {
   constructor(private prisma: PrismaService) {}
 
+  @Get('resources')
+  async getResources() {
+    return this.prisma.resource.findMany({
+      orderBy: [{ category: 'asc' }, { name: 'asc' }],
+    })
+  }
+
   @Get('processes')
   async getProcesses() {
     return this.prisma.process.findMany({

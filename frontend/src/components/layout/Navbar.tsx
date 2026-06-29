@@ -38,6 +38,7 @@ export function Navbar() {
           {isAuthenticated ? (
             <>
               <Link to="/app/dashboard" className="text-zinc-400 hover:text-white text-sm transition-colors">Dashboard</Link>
+              <Link to="/app/inventario" className="text-zinc-400 hover:text-white text-sm transition-colors">Inventário</Link>
               <Link to="/app/timers" className="text-zinc-400 hover:text-white text-sm transition-colors">Lembretes</Link>
               <Button variant="ghost" onClick={handleLogout} className="text-sm">Sair</Button>
             </>
@@ -56,6 +57,7 @@ export function Navbar() {
           {isAuthenticated ? (
             <>
               <Link to="/app/dashboard" onClick={() => setMenuOpen(false)} className="text-zinc-400 hover:text-white text-sm transition-colors py-1">Dashboard</Link>
+              <Link to="/app/inventario" onClick={() => setMenuOpen(false)} className="text-zinc-400 hover:text-white text-sm transition-colors py-1">Inventário</Link>
               <Link to="/app/timers" onClick={() => setMenuOpen(false)} className="text-zinc-400 hover:text-white text-sm transition-colors py-1">Lembretes</Link>
               <button onClick={handleLogout} className="text-zinc-400 hover:text-white text-sm transition-colors py-1 text-left">Sair</button>
             </>

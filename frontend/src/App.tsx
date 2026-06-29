@@ -8,6 +8,7 @@ import { Register } from './pages/Register'
 import { Dashboard } from './pages/app/Dashboard'
 import { CharacterPage } from './pages/app/CharacterPage'
 import { Timers } from './pages/app/Timers'
+import { Inventory } from './pages/app/Inventory'
 import { AudioPlayer } from './components/ui/AudioPlayer'
 import { Calculator } from './pages/Calculator'
 
@@ -36,6 +37,9 @@ export default function App() {
           } />
           <Route path="/app/timers" element={
             <ProtectedRoute><Timers /></ProtectedRoute>
+          } />
+          <Route path="/app/inventario" element={
+            <ProtectedRoute><Inventory /></ProtectedRoute>
           } />
           <Route path="/calculadora" element={<Calculator />} />
         </Routes>
