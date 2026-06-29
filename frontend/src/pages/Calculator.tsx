@@ -17,20 +17,32 @@ const CATEGORY_FILTERS: Record<string, string[]> = {
   MOUNT: ['MONTARIA', 'JACKAL'],
 }
 
-const TIER_ORDER: Record<string, number> = {
-  MORTAL: 1,
-  ARCH: 2,
-  CELESTIAL: 3,
-  RD: 4,
-  BAHAMUT: 5,
-  ANCIENT: 6,
-  MISTICA: 1,
-  ARCANA: 2,
-  AMUNRA: 3,
-  ANUBIS: 5,
-  MONTARIA: 1,
-  JACKAL: 2,
-  OTHER: 99,
+const TIER_ORDER_ARMOR: Record<string, number> = {
+  MORTAL: 1, ARCH: 2, CELESTIAL: 3, RD: 4, BAHAMUT: 5, ANCIENT: 6,
+}
+
+const TIER_ORDER_CYTHERA: Record<string, number> = {
+  MISTICA: 1, ARCANA: 2, AMUNRA: 3, BAHAMUT: 4, ANUBIS: 5,
+}
+
+const TIER_ORDER_ACCESSORY: Record<string, number> = {
+  AMUNRA: 1, BAHAMUT: 2, ANCIENT: 3,
+}
+
+const TIER_ORDER_MANTLE: Record<string, number> = {
+  CELESTIAL: 1, BAHAMUT: 2,
+}
+
+const TIER_ORDER_MOUNT: Record<string, number> = {
+  MONTARIA: 1, JACKAL: 2,
+}
+
+const TIER_ORDER_BY_CATEGORY: Record<string, Record<string, number>> = {
+  ARMOR: TIER_ORDER_ARMOR,
+  CYTHERA: TIER_ORDER_CYTHERA,
+  ACCESSORY: TIER_ORDER_ACCESSORY,
+  MANTLE: TIER_ORDER_MANTLE,
+  MOUNT: TIER_ORDER_MOUNT,
 }
 
 function getProcessTiers(name: string): string[] {
@@ -38,17 +50,23 @@ function getProcessTiers(name: string): string[] {
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
 
+  // Anubis tem prioridade — criações de Anubis NÃO vão para BAHAMUT
+  if (n.includes('ANUBIS')) return ['ANUBIS']
+
+  // Mortal/Arch juntos aparecem nos dois filtros
   if (n.includes('MORTAL') && n.includes('ARCH')) return ['MORTAL', 'ARCH']
+
+  // Criações de armadura — detecta pelo resultado
   if (n.includes('CRIACAO ARMADURA BAHAMUT') || (n.includes('RD') && n.includes('BAHAMUT'))) return ['BAHAMUT']
   if (n.includes('CRIACAO ITEM RD') || (n.includes('CELESTIAL') && n.includes('RD +9'))) return ['RD']
   if (n.includes('CRIACAO ITEM CELESTIAL') || n.includes('CRIACAO ARMA CELESTIAL')) return ['CELESTIAL']
+
   if (n.includes('ANCIENT')) return ['ANCIENT']
   if (n.includes('BAHAMUT')) return ['BAHAMUT']
   if (n.includes(' RD') || n.includes('RD ') || n.includes('/ARMA RD')) return ['RD']
   if (n.includes('CELESTIAL')) return ['CELESTIAL']
   if (n.includes(' ARCH') || n.includes('ARCH ') || n.includes('ARMADURA ARCH') || n.includes('ARMA ARCH')) return ['ARCH']
   if (n.includes('MORTAL')) return ['MORTAL']
-  if (n.includes('ANUBIS')) return ['ANUBIS']
   if (n.includes('ARCANA')) return ['ARCANA']
   if (n.includes('AMUNRA')) return ['AMUNRA']
   if (n.includes('MISTICA') || n.includes('MYSTICA')) return ['MISTICA']
@@ -59,9 +77,10 @@ function getProcessTiers(name: string): string[] {
 
 function getProcessOrder(process: any): number {
   const tiers = getProcessTiers(process.name)
-  const tierOrder = Math.min(...tiers.map(t => TIER_ORDER[t] ?? 99))
+  const orderMap = TIER_ORDER_BY_CATEGORY[process.category] ?? {}
+  const tierOrder = Math.min(...tiers.map(t => orderMap[t] ?? 99))
   const n = process.name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-  const isCreation = n.includes('criacao') || n.includes('composicao')
+  const isCreation = n.includes('criacao') || n.includes('composicao') || n.includes('adicional')
   const level = process.fromLevel ?? 0
   return tierOrder * 10000 + (isCreation ? 0 : 1000) + level
 }

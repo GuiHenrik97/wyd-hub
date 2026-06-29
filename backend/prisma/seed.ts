@@ -413,6 +413,27 @@ async function main() {
         { slug: 'gold', quantity: 5, isConsumedOnFail: true },
       ]
     },
+    {
+      name: 'Refinação Cythera Bahamut +13→+15 (Premium)',
+      category: 'CYTHERA',
+      notes: 'Não reduz refinação em falha. Anubis Crystal dobra a chance (opcional).',
+      resources: [
+        { slug: 'crystal-bahamut', quantity: 50, isConsumedOnFail: true },
+        { slug: 'pl', quantity: 60, isConsumedOnFail: true },
+        { slug: 'folha-mandragora', quantity: 10, isConsumedOnFail: true },
+        { slug: 'gold', quantity: 100, isConsumedOnFail: true },
+      ]
+    },
+    {
+      name: 'Adicional Cythera Bahamut',
+      category: 'CYTHERA',
+      notes: 'NPC DarkBlackSmith. Insere adicional na Cythera Bahamut.',
+      resources: [
+        { slug: 'crystal-bahamut', quantity: 30, isConsumedOnFail: true },
+        { slug: 'pl', quantity: 20, isConsumedOnFail: true },
+        { slug: 'gold', quantity: 10, isConsumedOnFail: true },
+      ]
+    },
     // === CYTHERA AMUNRA ===
     {
       name: 'Criação Cythera Amunra',
@@ -425,7 +446,7 @@ async function main() {
       ]
     },
     {
-      name: 'Refinação Cythera Amunra +0→+13',
+      name: 'Refinação Cythera Amunra +1→+13',
       category: 'CYTHERA',
       notes: 'NPC DarkBlackSmith. Folha de Mandrágora OU Selo Mágico.',
       resources: [
@@ -444,6 +465,16 @@ async function main() {
         { slug: 'pl', quantity: 60, isConsumedOnFail: true },
         { slug: 'folha-mandragora', quantity: 10, isConsumedOnFail: true },
         { slug: 'gold', quantity: 100, isConsumedOnFail: true },
+      ]
+    },
+    {
+      name: 'Adicional Cythera Amunra',
+      category: 'CYTHERA',
+      notes: 'NPC DarkBlackSmith. Insere adicional na Cythera Amunra.',
+      resources: [
+        { slug: 'crystal-amunra', quantity: 30, isConsumedOnFail: true },
+        { slug: 'pl', quantity: 20, isConsumedOnFail: true },
+        { slug: 'gold', quantity: 10, isConsumedOnFail: true },
       ]
     },
     // === CYTHERA ANUBIS ===
@@ -604,11 +635,12 @@ async function main() {
       name: 'Composição Bahamut Essence',
       category: 'ACCESSORY',
       successRate: 0.25,
-      notes: 'NPC Torvald, Arzan.',
+      notes: 'NPC Torvald, Arzan. Para o último material use 5x Bahamut Simbol OU 7x Lágrima Vermelha.',
       resources: [
         { slug: 'bahamut-horn', quantity: 1, isConsumedOnFail: true },
         { slug: 'crystal-bahamut', quantity: 80, isConsumedOnFail: true },
         { slug: 'emblema-valk-9', quantity: 4, isConsumedOnFail: true },
+        { slug: 'bahamut-simbol', quantity: 5, isConsumedOnFail: true },
       ]
     },
     {
