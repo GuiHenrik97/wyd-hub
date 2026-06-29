@@ -36,24 +36,24 @@ function CharacterCard({ char, onClick, onEdit, onDelete }: { char: any; onClick
           onClick={e => { e.stopPropagation(); onDelete() }}
           className="text-zinc-600 hover:text-red-400 text-xs px-2 py-1 rounded-lg hover:bg-zinc-800 transition-all"
         >
-          ✕
+          Excluir
         </button>
       </div>
 
-      <div className="flex items-start justify-between mb-4 pr-16">
-        <div>
-          <h3 className="text-white font-medium text-xl group-hover:text-amber-500 transition-colors">
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex flex-col min-w-0 pr-32">
+          <h3 className="text-white font-medium text-xl group-hover:text-amber-500 transition-colors truncate">
             {char.nick}
           </h3>
-          <p className="text-zinc-500 text-sm mt-0.5">
+          <p className="text-zinc-500 text-sm mt-0.5 truncate">
             {class1}{class2 ? ` · ${class2}` : ''}
           </p>
+          {char.hasGuild && (
+            <span className="text-xs text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded-full border border-zinc-700 mt-1 w-fit">
+              {char.guild || 'Guild'}
+            </span>
+          )}
         </div>
-        {char.hasGuild && (
-          <span className="text-xs text-zinc-400 bg-zinc-800 px-3 py-1 rounded-full border border-zinc-700 shrink-0">
-            {char.guild || 'Guild'}
-          </span>
-        )}
       </div>
 
       <div className="grid grid-cols-3 gap-3">
