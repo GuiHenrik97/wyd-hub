@@ -269,6 +269,7 @@ enum ResourceCategory {
   BAHAMUT
   TEAR
   CYTHERA
+  PARCHMENT
   MANTLE
   MOUNT
   COIN

@@ -11,13 +11,14 @@ const CATEGORY_LABELS: Record<string, string> = {
   BAHAMUT: 'Bahamut',
   TEAR: 'Lágrimas',
   CYTHERA: 'Cythera',
+  PARCHMENT: 'Pergaminhos',
   MANTLE: 'Capa',
   MOUNT: 'Montaria',
   COIN: 'Moedas',
   OTHER: 'Outros',
 }
 
-const CATEGORY_ORDER = ['POWDER', 'CRYSTAL', 'STONE', 'EMBLEM', 'MEDAL', 'DRAGON', 'BAHAMUT', 'TEAR', 'CYTHERA', 'MANTLE', 'MOUNT', 'COIN', 'OTHER']
+const CATEGORY_ORDER = ['POWDER', 'CRYSTAL', 'STONE', 'EMBLEM', 'MEDAL', 'DRAGON', 'BAHAMUT', 'TEAR', 'CYTHERA', 'PARCHMENT', 'MANTLE', 'MOUNT', 'COIN', 'OTHER']
 
 const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 

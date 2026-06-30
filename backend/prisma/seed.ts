@@ -339,7 +339,7 @@ async function main() {
       where: { slug: 'lagrima-lucky' },
       update: {},
       create: {
-        name: 'Lágrima Lucky',
+        name: 'Lágrima Verde (Lucky)',
         slug: 'lagrima-lucky',
         category: 'TEAR',
         mobile: false,
@@ -383,7 +383,7 @@ async function main() {
       create: {
         name: 'Âmago de Dragão Lendário',
         slug: 'amago-dl',
-        category: 'CYTHERA',
+        category: 'MOUNT',
         mobile: true,
       },
     }),
@@ -425,7 +425,7 @@ async function main() {
       create: {
         name: 'Ruby',
         slug: 'ruby',
-        category: 'MANTLE',
+        category: 'COIN',
         mobile: false,
       },
     }),
@@ -587,7 +587,7 @@ async function main() {
       where: { slug: 'wyden-coin' },
       update: {},
       create: {
-        name: 'Wyden Coin',
+        name: 'Wyden Coin (moeda NP)',
         slug: 'wyden-coin',
         category: 'COIN',
         mobile: true,
@@ -649,7 +649,7 @@ async function main() {
       create: {
         name: 'Cupom de Bônus',
         slug: 'cupom-bonus',
-        category: 'OTHER',
+        category: 'COIN',
         mobile: false,
       },
     }),
@@ -713,6 +713,16 @@ async function main() {
         mobile: false,
       },
     }),
+    prisma.resource.upsert({ where: { slug: 'amago-dl-9' }, update: {}, create: { name: 'Âmago de Dragão Lendário +9', slug: 'amago-dl-9', category: 'MOUNT', mobile: true } }),
+    prisma.resource.upsert({ where: { slug: 'amago-dv-9' }, update: {}, create: { name: 'Âmago de Dragão Vermelho +9', slug: 'amago-dv-9', category: 'MOUNT', mobile: true } }),
+    prisma.resource.upsert({ where: { slug: 'barra-100kk' }, update: {}, create: { name: 'Barra de 100kk', slug: 'barra-100kk', category: 'COIN', mobile: true } }),
+    prisma.resource.upsert({ where: { slug: 'pergaminho-a' }, update: {}, create: { name: 'Pergaminho (A)', slug: 'pergaminho-a', category: 'PARCHMENT' as any, mobile: true } }),
+    prisma.resource.upsert({ where: { slug: 'pergaminho-m' }, update: {}, create: { name: 'Pergaminho (M)', slug: 'pergaminho-m', category: 'PARCHMENT' as any, mobile: true } }),
+    prisma.resource.upsert({ where: { slug: 'infernal-scroll' }, update: {}, create: { name: 'Infernal', slug: 'infernal-scroll', category: 'PARCHMENT' as any, mobile: true } }),
+    prisma.resource.upsert({ where: { slug: 'commemorative-coin' }, update: {}, create: { name: 'Commemorative Coin', slug: 'commemorative-coin', category: 'COIN', mobile: true } }),
+    prisma.resource.upsert({ where: { slug: 'black-coin' }, update: {}, create: { name: 'Black Coin', slug: 'black-coin', category: 'COIN', mobile: true } }),
+    prisma.resource.upsert({ where: { slug: 'cythera-m' }, update: {}, create: { name: 'Cythera (M)', slug: 'cythera-m', category: 'CYTHERA', mobile: true } }),
+    prisma.resource.upsert({ where: { slug: 'cythera-a' }, update: {}, create: { name: 'Cythera (A)', slug: 'cythera-a', category: 'CYTHERA', mobile: true } }),
   ]);
 
   console.log(`Created ${resources.length} resources`);
